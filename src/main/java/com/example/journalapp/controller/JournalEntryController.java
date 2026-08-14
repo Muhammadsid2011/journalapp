@@ -47,7 +47,7 @@ public class JournalEntryController {
     }
 
 
-    @GetMapping("id?{id}")
+    @GetMapping("id/{id}")
     public ResponseEntity<JournalEntry> getJournalById(@PathVariable ObjectId id){
         Optional<JournalEntry> journalEntry = journalEntryService.findById(id);
         if(journalEntry.isPresent()){
