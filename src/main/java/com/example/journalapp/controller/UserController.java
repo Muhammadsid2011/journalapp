@@ -3,6 +3,7 @@ package com.example.journalapp.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import com.example.journalapp.service.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Value("${spring.mongodb.uri}")
+    private String uri;
 
     @GetMapping
     public List<User> getAllUser(){
@@ -28,8 +31,15 @@ public class UserController {
     }
 
     @PostMapping
-    public void createUser(@RequestBody User user){
-        userService.saveEntry(user);
+    public ResponseEntity<?> createUser(@RequestBody User user){
+        try {
+            System.out.println(uri);
+            userService.saveEntry(user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("{username}")
